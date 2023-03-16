@@ -3,19 +3,17 @@ import React, { FC, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 
 import {
+  citySelector,
   departmentsDataSelector,
-  departmentsPageSelector,
-  departmentsDepartmentRefSelector,
-  departmentsCitySelector,
+  pageSelector,
 } from "../../redux/selectors/departmentsSelectors";
 
-import { getDepartments } from "../../redux/operations/departmentsOperations";
+import { getDepartmentsForCity } from "../../redux/operations/departmentsOperations";
 
 import {
-  CitiesSelect,
+  DepartmentsForm,
   DepartmentsList,
   DepartmentsPagination,
-  DepartmentsSelect,
 } from "../../components/Departments";
 
 import { Header } from "../../components/Common";
@@ -25,20 +23,19 @@ import { Container, Typography } from "@mui/material";
 const PageDepartments: FC = () => {
   const dispatch = useAppDispatch();
 
+  // Get page for fecth data
+  const page = useAppSelector(pageSelector);
+
+  // Get city for fecth data
+  const city = useAppSelector(citySelector);
+
+  // Get all departments for city
   const departments = useAppSelector(departmentsDataSelector);
-  const page = useAppSelector(departmentsPageSelector);
-  const departmentRef = useAppSelector(departmentsDepartmentRefSelector);
-  const city = useAppSelector(departmentsCitySelector);
 
+  // If city or page change, fetch data
   useEffect(() => {
-    if (city) dispatch(getDepartments({ city, page }));
+    if (city) dispatch(getDepartmentsForCity({ city, page }));
   }, [dispatch, city, page]);
-
-  const filteredDepartments = departments.filter(
-    ({ Ref }) => Ref === departmentRef
-  );
-
-  const departmentsData = departmentRef ? filteredDepartments : departments;
 
   return (
     <>
@@ -53,10 +50,14 @@ const PageDepartments: FC = () => {
           Список вiддiлень
         </Typography>
         <Container sx={{ pt: "3rem", pb: "3rem" }}>
-          <CitiesSelect />
-          <DepartmentsSelect />
-          {departments.length > 0 && <DepartmentsPagination />}
-          {city && <DepartmentsList departmentsData={departmentsData} />}
+          <DepartmentsForm />
+
+          {departments && (
+            <>
+              <DepartmentsPagination />
+              <DepartmentsList />
+            </>
+          )}
         </Container>
       </section>
     </>
