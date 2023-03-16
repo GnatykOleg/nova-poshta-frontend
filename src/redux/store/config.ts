@@ -18,8 +18,8 @@ export const middlewareConfig = {
 };
 
 export const persistConfig = {
-  key: "billOfLading",
+  key: "trackingNumbers",
   storage,
-  whitelist: ["billOfLadingState"],
+  whitelist: ["trackingNumbersState"],
   blacklist: ["_persist", "trackingState", "departmentsState"],
 };

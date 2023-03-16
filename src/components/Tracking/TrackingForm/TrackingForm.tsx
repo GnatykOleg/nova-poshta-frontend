@@ -5,7 +5,7 @@ import * as Styled from "./TrackingForm.styled";
 
 const TrackingForm: React.FC<ITrackingFormProps> = ({
   onChange,
-  billOfLading,
+  trackingNumber,
   submitForm,
   sidebarHandler,
 }: ITrackingFormProps): JSX.Element => {
@@ -15,7 +15,7 @@ const TrackingForm: React.FC<ITrackingFormProps> = ({
         variant="outlined"
         label="Введiть ТТН"
         type="number"
-        value={billOfLading}
+        value={trackingNumber}
         onChange={(event) => onChange(event)}
       />
 

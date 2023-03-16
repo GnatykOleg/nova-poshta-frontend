@@ -1,13 +1,13 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import trackingSlice from "../slices/trackingSlice";
-import billOfLadingSlice from "../slices/billOfLadingSlice";
+import trackingNumbersSlice from "../slices/trackingNumbersSlice";
 import departmentsSlice from "../slices/departmentsSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import { persistConfig, middlewareConfig } from "./config";
 
 const rootReducer = combineReducers({
   trackingState: trackingSlice,
-  billOfLadingState: billOfLadingSlice,
+  trackingNumbersState: trackingNumbersSlice,
   departmentsState: departmentsSlice,
 });
 
