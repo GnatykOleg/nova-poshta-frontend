@@ -13,7 +13,7 @@ export const getTrackingStatus = createAsyncThunk<
 >("tracking", async (trackingNumber: string, { rejectWithValue }) => {
   try {
     const { data }: AxiosResponse<IGetTrackingStatusData> = await axios.get(
-      `${REACT_APP_BACKEND_BASE_URL}tracking/${trackingNumber}`
+      `${REACT_APP_BACKEND_BASE_URL}/api/tracking/${trackingNumber}`
     );
 
     return data;
