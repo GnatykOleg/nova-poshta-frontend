@@ -15,16 +15,6 @@ export interface IDataFromApi<T> {
   infoCodes: [];
 }
 
-export interface ITrackingSliceState {
-  trackingData: IDataFromApi<[]>;
-  loading: boolean;
-  error: null | string;
-}
-
-export interface IBillOfLadingState {
-  billOfLadingStory: Array<string>;
-}
-
 export interface IDepartmentsSliceState {
   departmentsData: IDataFromApi<{ totalCount: number }>;
   citiesData: IDataFromApi<{ totalCount: number }>;
@@ -38,8 +28,31 @@ export interface IDepartmentsSliceState {
   error: null | string;
 }
 
+// New and update
+export interface IGetTrackingStatusData {
+  _id: string;
+  CityRecipient: string;
+  CitySender: string;
+  Number: string;
+  Status: string;
+  WarehouseRecipient: string;
+  WarehouseSender: string;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+}
+
+export interface ITrackingSliceState {
+  trackingData: IGetTrackingStatusData | null;
+  loading: boolean;
+  error: null | string;
+}
+
+export interface ITrackingNumbersStoryState {
+  trackingNumbersStory: Array<string>;
+}
+
 export interface IState {
   trackingState: ITrackingSliceState;
-  billOfLadingState: IBillOfLadingState;
+  trackingNumbersState: ITrackingNumbersStoryState;
   departmentsState: IDepartmentsSliceState;
 }

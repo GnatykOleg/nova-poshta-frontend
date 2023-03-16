@@ -1,20 +1,12 @@
 import { createSlice, PayloadAction, AnyAction } from "@reduxjs/toolkit";
 import { getTrackingStatus } from "../operations/trackingOperations";
-import { ITrackingSliceState, IDataFromApi } from "../../types/redux.types";
+import {
+  ITrackingSliceState,
+  IGetTrackingStatusData,
+} from "../../types/redux.types";
 
 const initialState: ITrackingSliceState = {
-  trackingData: {
-    success: false,
-    data: [],
-    errors: [],
-    translatedErrors: [],
-    warnings: [],
-    info: [],
-    messageCodes: [],
-    errorCodes: [],
-    warningCodes: [],
-    infoCodes: [],
-  },
+  trackingData: null,
   loading: false,
   error: null,
 };
@@ -32,7 +24,7 @@ const trackingSlice = createSlice({
 
     builder.addCase(
       getTrackingStatus.fulfilled,
-      (state, { payload }: PayloadAction<IDataFromApi<[]>>) => {
+      (state, { payload }: PayloadAction<IGetTrackingStatusData>) => {
         state.trackingData = payload;
         state.loading = false;
       }
@@ -40,6 +32,7 @@ const trackingSlice = createSlice({
 
     builder.addMatcher(isError, (state, { payload }: PayloadAction<string>) => {
       state.error = payload;
+      state.trackingData = null;
       state.loading = false;
     });
   },
