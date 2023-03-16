@@ -1,7 +1,12 @@
 import React from "react";
 import { Box, Button, CardActions, Typography } from "@mui/material";
 import { useAppSelector } from "../../../hooks/reduxHooks";
-import { trackingDataSelector } from "../../../redux/selectors/trackingSelectors";
+import {
+  trackingDataSelector,
+  trackingLoadingSelector,
+} from "../../../redux/selectors/trackingSelectors";
+import { ITrackindDataProps } from "../../../types/tracking-components.types";
+
 import DescriptionIcon from "@mui/icons-material/Description";
 import SystemUpdateAltIcon from "@mui/icons-material/SystemUpdateAlt";
 import PinDropIcon from "@mui/icons-material/PinDrop";
@@ -9,28 +14,39 @@ import NumbersIcon from "@mui/icons-material/Numbers";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import * as Styled from "./TrackingData.styled";
+import { Loader } from "../../Common";
 
-const TrackingData: React.FC<any> = ({ setShowBillOfLadingStatus }: any) => {
+const TrackingData: React.FC<ITrackindDataProps> = ({
+  setShowTrackingData,
+}: ITrackindDataProps) => {
   const trackingData = useAppSelector(trackingDataSelector);
 
-  const { WarehouseSender, Status, WarehouseRecipient, StatusCode, Number } =
-    trackingData[0] || {};
+  const loading = useAppSelector(trackingLoadingSelector);
 
-  const deliveryStatus =
-    StatusCode === "3" ? `ТТН: ${Number} Не знайдений у базi...` : ` ${Status}`;
+  const {
+    CityRecipient,
+    CitySender,
+    Number,
+    Status,
+    WarehouseRecipient,
+    WarehouseSender,
+  } = trackingData!!;
+
+  if (loading) return <Loader />;
 
   return (
     <Styled.MyCard>
       <CardActions sx={{ justifyContent: "flex-end" }}>
         <Button
-          onClick={() => setShowBillOfLadingStatus(false)}
+          onClick={() => setShowTrackingData(false)}
           endIcon={<VisibilityOffIcon />}
         >
           Приховати
         </Button>
       </CardActions>
       <Styled.MyCardContent>
-        {/* BillOFLading */}
+        {/* trackingNumber */}
+
         <Styled.MyTextWrapper>
           <Styled.MyTitle>
             <NumbersIcon sx={{ mr: "10px" }} /> ТТН:
@@ -46,7 +62,7 @@ const TrackingData: React.FC<any> = ({ setShowBillOfLadingStatus }: any) => {
             <DescriptionIcon sx={{ mr: "10px" }} /> Статус доставки:
           </Styled.MyTitle>
           <Typography variant="h6" component={"p"}>
-            {deliveryStatus}
+            {Status}
           </Typography>
         </Styled.MyTextWrapper>
 
@@ -56,7 +72,7 @@ const TrackingData: React.FC<any> = ({ setShowBillOfLadingStatus }: any) => {
             <SystemUpdateAltIcon sx={{ mr: "10px" }} /> Відправник:
           </Styled.MyTitle>
           <Typography variant="h6" component={"p"}>
-            {WarehouseSender || "Інформація відсутня..."}
+            {`${WarehouseSender}, ${CitySender}`}
           </Typography>
         </Styled.MyTextWrapper>
 
@@ -66,7 +82,7 @@ const TrackingData: React.FC<any> = ({ setShowBillOfLadingStatus }: any) => {
             <PinDropIcon sx={{ mr: "10px" }} /> Одержувач:
           </Styled.MyTitle>
           <Typography variant="h6" component={"p"}>
-            {WarehouseRecipient || "Інформація відсутня..."}
+            {`${WarehouseRecipient}, ${CityRecipient}`}
           </Typography>
         </Box>
       </Styled.MyCardContent>

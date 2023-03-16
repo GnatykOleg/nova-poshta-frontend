@@ -6,14 +6,18 @@ export type EventOnSubmit = React.FormEvent<HTMLFormElement>;
 
 export interface ITrackingFormProps {
   onChange: (event: EventOnChange) => void;
-  billOfLading: string;
+  trackingNumber: string;
   submitForm: (event: EventOnSubmit) => void;
   sidebarHandler: () => void;
 }
 
 export interface ITrackingStoryProps {
-  getBillOfLadingStatusFromTrackingStory: (billOfLading: string) => void;
-  deleteBillOfLadingFromTrackingStory: (billOfLading: string) => void;
+  getTrackingStatusFromStory: (trackingNumber: string) => void;
+  deleteTrackingNumberFromStory: (trackingNumber: string) => void;
   sidebarHandler: () => void;
   isSideBarOpen: boolean;
+}
+
+export interface ITrackindDataProps {
+  setShowTrackingData: (value: React.SetStateAction<boolean>) => void;
 }

@@ -2,11 +2,6 @@ import React, { FC, useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 
-import {
-  setTBillOfLadingStory,
-  deleteTBillOfLadingStory,
-} from "../../redux/slices/billOfLadingSlice";
-
 import { getTrackingStatus } from "../../redux/operations/trackingOperations";
 
 import { trackingDataSelector } from "../../redux/selectors/trackingSelectors";
@@ -29,46 +24,67 @@ import * as Styled from "./PageCheckBillOfLading.styles";
 import { Typography } from "@mui/material";
 
 import { toast } from "react-toastify";
+import {
+  deleteTrackingNumberFromPersist,
+  setTrackingNumberToStory,
+} from "../../redux/slices/trackingNumbersSlice";
 
 const PageCheckBillOfLading: FC = () => {
-  const [billOfLading, setBillOfLading] = useState("");
+  const [trackingNumber, setTrackingNumber] = useState("");
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
-  const [showBillOfLadingStatus, setShowBillOfLadingStatus] =
-    useState<boolean>(true);
+  const [showTrackingData, setShowTrackingData] = useState<boolean>(true);
 
   const dispatch = useAppDispatch();
 
   const trackingData = useAppSelector(trackingDataSelector);
 
   const onChange = (event: EventOnChange) => {
-    setBillOfLading(event.currentTarget.value);
+    setTrackingNumber(event.currentTarget.value);
   };
 
   const submitForm = (event: EventOnSubmit) => {
     event.preventDefault();
     const regex = /^\d{14}$/;
 
-    if (!regex.test(billOfLading))
+    if (!regex.test(trackingNumber))
       return toast.warn("ТТН повинен складатися з 14 цифр");
 
-    setBillOfLading("");
-    setShowBillOfLadingStatus(true);
-    dispatch(setTBillOfLadingStory(billOfLading));
-    dispatch(getTrackingStatus(billOfLading));
+    // Reset the value of the TTN number
+    setTrackingNumber("");
+
+    // Show information card
+    setShowTrackingData(true);
+
+    // Send a request via TTN to the backend
+    dispatch(getTrackingStatus(trackingNumber));
+
+    // Write TTN in local storage only if the date is true
+    trackingData && dispatch(setTrackingNumberToStory(trackingNumber));
   };
 
-  const getBillOfLadingStatusFromTrackingStory = (billOfLading: string) => {
-    setBillOfLading(billOfLading);
-    setShowBillOfLadingStatus(true);
-    dispatch(getTrackingStatus(billOfLading));
+  const getTrackingStatusFromStory = (trackingNumber: string) => {
+    // Set the value of TTN in the input of the form
+    setTrackingNumber(trackingNumber);
+
+    // Show information card
+    setShowTrackingData(true);
+
+    // Send a request via TTN to the backend
+    dispatch(getTrackingStatus(trackingNumber));
   };
 
-  const deleteBillOfLadingFromTrackingStory = (billOfLading: string) => {
-    dispatch(deleteTBillOfLadingStory(billOfLading));
-    setShowBillOfLadingStatus(false);
-    setBillOfLading("");
+  const deleteTrackingNumberFromStory = (trackingNumber: string) => {
+    // Remove the information card
+    setShowTrackingData(false);
+
+    // Reset the value of the TTN number
+    setTrackingNumber("");
+
+    // Send an action to filter and resave the history of ttn in local strage
+    dispatch(deleteTrackingNumberFromPersist(trackingNumber));
   };
 
+  // Sidebar toggle for TTN history
   const sidebarHandler = () => {
     setIsSideBarOpen((state) => !state);
   };
@@ -88,27 +104,24 @@ const PageCheckBillOfLading: FC = () => {
           </Typography>
 
           <TrackingStory
-            getBillOfLadingStatusFromTrackingStory={
-              getBillOfLadingStatusFromTrackingStory
-            }
-            deleteBillOfLadingFromTrackingStory={
-              deleteBillOfLadingFromTrackingStory
-            }
+            getTrackingStatusFromStory={getTrackingStatusFromStory}
+            deleteTrackingNumberFromStory={deleteTrackingNumberFromStory}
             sidebarHandler={sidebarHandler}
             isSideBarOpen={isSideBarOpen}
           />
 
           <Styled.MyContainer>
             <TrackingForm
-              billOfLading={billOfLading}
+              trackingNumber={trackingNumber}
               onChange={onChange}
               submitForm={submitForm}
               sidebarHandler={sidebarHandler}
             />
-            {trackingData.length > 0 && showBillOfLadingStatus && (
-              <TrackingData
-                setShowBillOfLadingStatus={setShowBillOfLadingStatus}
-              />
+
+            {/* I show a card with information only if the Data is not null and the flag show the card is true */}
+
+            {trackingData && showTrackingData && (
+              <TrackingData setShowTrackingData={setShowTrackingData} />
             )}
           </Styled.MyContainer>
         </section>

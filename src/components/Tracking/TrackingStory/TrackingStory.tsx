@@ -2,8 +2,8 @@ import React from "react";
 import { nanoid } from "@reduxjs/toolkit";
 
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
-import { clearTBillOfLadingStory } from "../../../redux/slices/billOfLadingSlice";
-import { billOfLadingDataSelector } from "../../../redux/selectors/billOfLadingSelectors";
+import { clearTrackingNumbersStory } from "../../../redux/slices/trackingNumbersSlice";
+import { trackingNumbersDataSelector } from "../../../redux/selectors/trackingNumbersSelectors";
 
 import { ITrackingStoryProps } from "../../../types/tracking-components.types";
 
@@ -14,14 +14,14 @@ import PrimaryButton from "../../Common/PrimaryButton/PrimaryButton";
 import * as Styled from "./TrackingStory.styled";
 
 const TrackingStory: React.FC<ITrackingStoryProps> = ({
-  getBillOfLadingStatusFromTrackingStory,
-  deleteBillOfLadingFromTrackingStory,
+  getTrackingStatusFromStory,
+  deleteTrackingNumberFromStory,
   sidebarHandler,
   isSideBarOpen,
 }: ITrackingStoryProps) => {
   const dispatch = useAppDispatch();
 
-  const story = useAppSelector(billOfLadingDataSelector);
+  const story = useAppSelector(trackingNumbersDataSelector);
 
   return (
     <Styled.MyDrawer anchor="right" open={isSideBarOpen} variant="temporary">
@@ -34,7 +34,8 @@ const TrackingStory: React.FC<ITrackingStoryProps> = ({
           <PrimaryButton
             text="Очистити iсторію ТТН"
             type="button"
-            onClick={() => dispatch(clearTBillOfLadingStory())}
+            // Clear strort in local storage
+            onClick={() => dispatch(clearTrackingNumbersStory())}
           />
         </Styled.ActionsWrapper>
 
@@ -47,19 +48,15 @@ const TrackingStory: React.FC<ITrackingStoryProps> = ({
           </Typography>
         )}
 
-        {story.map((billOfLading: string) => (
+        {story.map((trackignNumber: string) => (
           <Styled.MyStoryWrapper key={nanoid()}>
-            <Button
-              onClick={() =>
-                getBillOfLadingStatusFromTrackingStory(billOfLading)
-              }
-            >
-              <Typography variant="body1">ТТН : {billOfLading}</Typography>
+            <Button onClick={() => getTrackingStatusFromStory(trackignNumber)}>
+              <Typography variant="body1">ТТН : {trackignNumber}</Typography>
             </Button>
             <PrimaryButton
               type="button"
               text="Видалити"
-              onClick={() => deleteBillOfLadingFromTrackingStory(billOfLading)}
+              onClick={() => deleteTrackingNumberFromStory(trackignNumber)}
             />
           </Styled.MyStoryWrapper>
         ))}
