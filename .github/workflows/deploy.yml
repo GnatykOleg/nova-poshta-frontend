@@ -13,16 +13,12 @@ jobs:
 
       - name: Install, build 🔧
         env:
-          REACT_APP_NP_API_KEY: ${{ secrets.REACT_APP_NP_API_KEY }}
-          REACT_APP_NP_BASE_URL: ${{ secrets.REACT_APP_NP_BASE_URL }}
           REACT_APP_BACKEND_BASE_URL: ${{ secrets.REACT_APP_BACKEND_BASE_URL }}
         run: |
           npm install
           npm run build
       - name: Deploy 🚀
         env:
-          REACT_APP_NP_API_KEY: ${{ secrets.REACT_APP_NP_API_KEY }}
-          REACT_APP_NP_BASE_URL: ${{ secrets.REACT_APP_NP_BASE_URL }}
           REACT_APP_BACKEND_BASE_URL: ${{ secrets.REACT_APP_BACKEND_BASE_URL }}
         uses: JamesIves/github-pages-deploy-action@4.1.0
         with:
