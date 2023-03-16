@@ -1,29 +1,14 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IDataFromApi } from "../../types/redux.types";
+import axios, { AxiosResponse } from "axios";
 
-import {
-  departmentsServiceApi,
-  departmentsCitiesServiceApi,
-} from "../../services/api/departmentsServiceApi";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { IGetDepartmentsForCityData } from "../../types/redux.types";
 
 import { toast } from "react-toastify";
 
-export const getDepartmentsCities = createAsyncThunk<
-  IDataFromApi<{ totalCount: number }>,
-  undefined,
-  { rejectValue: string }
->("cities", async (_, { rejectWithValue }) => {
-  try {
-    const { data } = await departmentsCitiesServiceApi();
-    return data;
-  } catch (error: any) {
-    toast.error(error.message);
-    return rejectWithValue(error.message);
-  }
-});
+const { REACT_APP_BACKEND_BASE_URL } = process.env;
 
-export const getDepartments = createAsyncThunk<
-  IDataFromApi<{ totalCount: number }>,
+export const getDepartmentsForCity = createAsyncThunk<
+  IGetDepartmentsForCityData,
   {
     city: string;
     page: number;
@@ -31,10 +16,13 @@ export const getDepartments = createAsyncThunk<
   { rejectValue: string }
 >("departments", async ({ city, page }, { rejectWithValue }) => {
   try {
-    const { data } = await departmentsServiceApi({ city, page });
+    const { data }: AxiosResponse<IGetDepartmentsForCityData> = await axios.get(
+      `${REACT_APP_BACKEND_BASE_URL}/api/departments/?city=${city}&page=${page}`
+    );
+
     return data;
   } catch (error: any) {
-    toast.error(error.message);
+    toast.error(error.response.data.message);
     return rejectWithValue(error.message);
   }
 });

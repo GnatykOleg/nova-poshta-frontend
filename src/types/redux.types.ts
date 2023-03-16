@@ -1,34 +1,32 @@
-import { SelectValuesTypes } from "./departments-components.types";
-
-export type ObjectData = [{ [key: string]: any }];
-
-export interface IDataFromApi<T> {
-  success: boolean;
-  data: ObjectData | [];
-  errors: Array<string> | [];
-  translatedErrors: [];
-  warnings: ObjectData | Array<string>;
-  info: T;
-  messageCodes: [];
-  errorCodes: [];
-  warningCodes: [];
-  infoCodes: [];
+interface IDepartments {
+  CityDescription: string;
+  CityRef: string;
+  Description: string;
+  Number: string;
+  Phone: string;
+  Ref: string;
+  Schedule: {
+    Вівторок: string;
+    Неділя: string;
+    "П'ятниця": string;
+    Понеділок: string;
+    Середа: string;
+    Субота: string;
+    Четвер: string;
+  };
 }
 
-export interface IDepartmentsSliceState {
-  departmentsData: IDataFromApi<{ totalCount: number }>;
-  citiesData: IDataFromApi<{ totalCount: number }>;
-
-  city: string;
-  departmentsSelectValue: SelectValuesTypes;
-  page: number;
-  departmentRef: string | undefined;
-
-  loading: boolean;
-  error: null | string;
+export interface IGetDepartmentsForCityData {
+  CityName: string;
+  CityRef: string;
+  Departments: Array<IDepartments>;
+  Page: string;
+  TotalCountForCity: number;
+  createdAt: Date;
+  updatedAt: Date;
+  _id: string;
 }
 
-// New and update
 export interface IGetTrackingStatusData {
   _id: string;
   CityRecipient: string;
@@ -43,6 +41,16 @@ export interface IGetTrackingStatusData {
 
 export interface ITrackingSliceState {
   trackingData: IGetTrackingStatusData | null;
+  loading: boolean;
+  error: null | string;
+}
+
+export interface IDepartmentsSliceState {
+  departmentsForCityData: IGetDepartmentsForCityData | null;
+
+  city: string;
+  page: number;
+
   loading: boolean;
   error: null | string;
 }
