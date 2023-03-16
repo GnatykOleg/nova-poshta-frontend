@@ -1,38 +1,29 @@
 import React from "react";
 
-import {
-  IDepartmentsListProps,
-  IDaySchedule,
-} from "../../../types/departments-components.types";
-
 import { useAppSelector } from "../../../hooks/reduxHooks";
-import { departmentsLoadingSelector } from "../../../redux/selectors/departmentsSelectors";
+
+import {
+  departmentsDataSelector,
+  departmentsLoadingSelector,
+} from "../../../redux/selectors/departmentsSelectors";
+
+import { nanoid } from "@reduxjs/toolkit";
 
 import { Grid, Card, CardContent, Typography } from "@mui/material";
-import { nanoid } from "@reduxjs/toolkit";
 
 import { Loader } from "../../Common";
 
-const DepartmentsList: React.FC<IDepartmentsListProps> = ({
-  departmentsData,
-}: IDepartmentsListProps) => {
+const DepartmentsList: React.FC = () => {
   // Get loading status
   const loading = useAppSelector(departmentsLoadingSelector);
 
-  const dayNames: IDaySchedule = {
-    Monday: "Понеділок",
-    Tuesday: "Вівторок",
-    Wednesday: "Середа",
-    Thursday: "Четвер",
-    Friday: "П'ятниця",
-    Saturday: "Субота",
-    Sunday: "Неділя",
-  };
+  // Get all departments for city
+  const departments = useAppSelector(departmentsDataSelector);
 
   if (loading) return <Loader />;
   return (
     <Grid container spacing={2}>
-      {departmentsData.map(
+      {departments?.Departments.map(
         ({ Description, CityDescription, Schedule, Phone }) => (
           <Grid item key={nanoid()} xs={12} sm={6} md={4}>
             <Card sx={{ height: "100%" }}>
@@ -61,7 +52,7 @@ const DepartmentsList: React.FC<IDepartmentsListProps> = ({
                     variant="body2"
                     key={nanoid()}
                   >
-                    {`${dayNames[day as keyof IDaySchedule]}: ${time}`}
+                    {`${[day]}: ${time}`}
                   </Typography>
                 ))}
               </CardContent>
