@@ -6,6 +6,7 @@ import {
   citySelector,
   departmentsDataSelector,
   pageSelector,
+  departmentsLoadingSelector,
 } from "../../redux/selectors/departmentsSelectors";
 
 import { getDepartmentsForCity } from "../../redux/operations/departmentsOperations";
@@ -16,7 +17,7 @@ import {
   DepartmentsPagination,
 } from "../../components/Departments";
 
-import { Header } from "../../components/Common";
+import { Header, Loader } from "../../components/Common";
 
 import { Container, Typography } from "@mui/material";
 
@@ -32,10 +33,14 @@ const PageDepartments: FC = () => {
   // Get all departments for city
   const departments = useAppSelector(departmentsDataSelector);
 
+  const loading = useAppSelector(departmentsLoadingSelector);
+
   // If city or page change, fetch data
   useEffect(() => {
     if (city) dispatch(getDepartmentsForCity({ city, page }));
   }, [dispatch, city, page]);
+
+  if (loading) return <Loader />;
 
   return (
     <>

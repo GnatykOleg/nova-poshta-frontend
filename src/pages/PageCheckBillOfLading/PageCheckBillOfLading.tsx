@@ -4,7 +4,10 @@ import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 
 import { getTrackingStatus } from "../../redux/operations/trackingOperations";
 
-import { trackingDataSelector } from "../../redux/selectors/trackingSelectors";
+import {
+  trackingDataSelector,
+  trackingLoadingSelector,
+} from "../../redux/selectors/trackingSelectors";
 
 import {
   EventOnChange,
@@ -17,7 +20,7 @@ import {
   TrackingStory,
 } from "../../components/Tracking";
 
-import { Header } from "../../components/Common";
+import { Header, Loader } from "../../components/Common";
 
 import * as Styled from "./PageCheckBillOfLading.styles";
 
@@ -37,6 +40,7 @@ const PageCheckBillOfLading: FC = () => {
   const dispatch = useAppDispatch();
 
   const trackingData = useAppSelector(trackingDataSelector);
+  const loading = useAppSelector(trackingLoadingSelector);
 
   const onChange = (event: EventOnChange) => {
     setTrackingNumber(event.currentTarget.value);
@@ -88,6 +92,8 @@ const PageCheckBillOfLading: FC = () => {
   const sidebarHandler = () => {
     setIsSideBarOpen((state) => !state);
   };
+
+  if (loading) return <Loader />;
 
   return (
     <>
